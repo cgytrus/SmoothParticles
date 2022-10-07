@@ -93,14 +93,12 @@ void __fastcall CCParticleSystem_initParticle_H(CCParticleSystem* self, void*, t
     // don't interpolate on x if didn't move on x
     if(_xDiff != 0.f) {
         float tx = t * _xDiff;
-        particle->pos.x = tx + (particle->pos.x - _xDiff);
         particle->startPos.x = tx + (particle->startPos.x - _xDiff);
     }
 
     // don't interpolate on y if didn't move on y
     if(_yDiff != 0.f) {
         float ty = t * _yDiff;
-        particle->pos.y = ty + (particle->pos.y - _yDiff);
         particle->startPos.y = ty + (particle->startPos.y - _yDiff);
     }
 
