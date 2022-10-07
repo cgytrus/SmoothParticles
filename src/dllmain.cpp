@@ -50,40 +50,35 @@ size_t _newIndex = 0;
 float _xDiff;
 float _yDiff;
 
-void updateEnd(CCParticleSystem* self, float dt);
 void (__thiscall* CCParticleSystem_update)(CCParticleSystem* self, float dt);
 void __fastcall CCParticleSystem_update_H(CCParticleSystem* self, void*, float dt) {
     _newCount = 0;
 
+    CCPoint curr = self->getPosition();
+
     // don't interpolate if running for the first time
     if(_prevPositions.find(self) == _prevPositions.end()) {
-        updateEnd(self, dt);
+        CCParticleSystem_update(self, dt);
+        _prevPositions[self] = curr;
         return;
     }
 
     CCPoint prev = _prevPositions[self];
+    _prevPositions[self] = curr;
 
-    float curSelfX;
-    float curSelfY;
-    self->getPosition(&curSelfX, &curSelfY);
-
-    _xDiff = curSelfX - prev.x;
-    _yDiff = curSelfY - prev.y;
+    _xDiff = curr.x - prev.x;
+    _yDiff = curr.y - prev.y;
 
     // don't interpolate if didn't move or moved too fast
     if(_xDiff == 0.f && _yDiff == 0.f || _xDiff >= tooFast || _yDiff >= tooFast) {
-        updateEnd(self, dt);
+        CCParticleSystem_update(self, dt);
         return;
     }
 
     _newCount = nextParticlesCount(self, dt);
     _newIndex = 0;
 
-    updateEnd(self, dt);
-}
-void updateEnd(CCParticleSystem* self, float dt) {
     CCParticleSystem_update(self, dt);
-    _prevPositions[self] = self->getPosition();
 }
 
 void (__thiscall* CCParticleSystem_initParticle)(CCParticleSystem* self, tCCParticle* particle);
@@ -134,22 +129,31 @@ void __fastcall CCParticleSystem_dector_H(CCParticleSystem* self) {
     CCParticleSystem_dector(self);
 }
 
+void hook(HMODULE module, const char* symbol, void* detour, void** orig) {
+    MH_CreateHook(reinterpret_cast<void*>(GetProcAddress(module, symbol)), detour, orig);
+}
+
 DWORD WINAPI mainThread(void* hModule) {
     MH_Initialize();
 
-    auto cocos2dBase = reinterpret_cast<uintptr_t>(GetModuleHandle("libcocos2d.dll"));
+    auto cocos2d = GetModuleHandle("libcocos2d.dll");
 
-    MH_CreateHook(reinterpret_cast<void*>(cocos2dBase + 0xb9600), CCParticleSystem_update_H,
+    hook(cocos2d, "?update@CCParticleSystem@cocos2d@@UAEXM@Z",
+        reinterpret_cast<void*>(CCParticleSystem_update_H),
         reinterpret_cast<void**>(&CCParticleSystem_update));
 
-    MH_CreateHook(reinterpret_cast<void*>(cocos2dBase + 0xb6e40), CCParticleSystem_initParticle_H,
+    hook(cocos2d, "?initParticle@CCParticleSystem@cocos2d@@QAEXPAUsCCParticle@2@@Z",
+        reinterpret_cast<void*>(CCParticleSystem_initParticle_H),
         reinterpret_cast<void**>(&CCParticleSystem_initParticle));
 
-    MH_CreateHook(reinterpret_cast<void*>(cocos2dBase + 0xb8e70), CCParticleSystem_resetSystem_H,
+    hook(cocos2d, "?resetSystem@CCParticleSystem@cocos2d@@QAEXXZ",
+        reinterpret_cast<void*>(CCParticleSystem_resetSystem_H),
         reinterpret_cast<void**>(&CCParticleSystem_resetSystem));
-    MH_CreateHook(reinterpret_cast<void*>(cocos2dBase + 0xb8ed0), CCParticleSystem_resumeSystem_H,
+    hook(cocos2d, "?resumeSystem@CCParticleSystem@cocos2d@@QAEXXZ",
+        reinterpret_cast<void*>(CCParticleSystem_resumeSystem_H),
         reinterpret_cast<void**>(&CCParticleSystem_resumeSystem));
-    MH_CreateHook(reinterpret_cast<void*>(cocos2dBase + 0xb68e0), CCParticleSystem_dector_H,
+    hook(cocos2d, "??1CCParticleSystem@cocos2d@@UAE@XZ",
+        reinterpret_cast<void*>(CCParticleSystem_dector_H),
         reinterpret_cast<void**>(&CCParticleSystem_dector));
 
     MH_EnableHook(MH_ALL_HOOKS);
@@ -158,8 +162,7 @@ DWORD WINAPI mainThread(void* hModule) {
 }
 
 BOOL APIENTRY DllMain(HMODULE handle, DWORD reason, LPVOID reserved) {
-    if(reason == DLL_PROCESS_ATTACH) {
+    if(reason == DLL_PROCESS_ATTACH)
         CreateThread(0, 0x100, mainThread, handle, 0, 0);
-    }
     return TRUE;
 }
