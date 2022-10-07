@@ -6,4 +6,4 @@
 	url = https://github.com/HJfod/cocos-headers
 [submodule "libraries/gd.h"]
 	path = libraries/gd.h
-	url = https://github.com/HJFod/gd.h
+	url = https://github.com/cgytrus/gd.h
