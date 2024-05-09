@@ -62,10 +62,10 @@ class $modify(CCParticleSystem) {
     void update(float dt) {
         // cant hook resumeSystem on android cuz its too small so instead we do this
 #ifdef GEODE_IS_ANDROID
-        if (!m_prevIsActive && m_bIsActive) {
-            m_firstTime = true;
+        if (!m_fields->m_prevIsActive && m_bIsActive) {
+            m_fields->m_firstTime = true;
         }
-        m_prevIsActive = m_bIsActive;
+        m_fields->m_prevIsActive = m_bIsActive;
 #endif
 
         m_fields->m_newCount = 0;
