@@ -1,4 +1,4 @@
-﻿## v2.0.1
+## v2.0.1
 - fixed android
 - refactored the math a little
 
