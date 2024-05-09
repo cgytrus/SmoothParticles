@@ -108,16 +108,12 @@ class $modify(CCParticleSystem) {
         float t = (float)m_fields->m_newIndex / (float)m_fields->m_newCount;
 
         // don't interpolate on x if didn't move on x
-        if (std::abs(m_fields->m_xDiff) >= 0.0001f) {
-            float tx = t * m_fields->m_xDiff;
-            particle->startPos.x = tx + (particle->startPos.x - m_fields->m_xDiff);
-        }
+        if(std::abs(m_fields->m_xDiff) >= 0.0001f)
+            particle->startPos.x -= m_fields->m_xDiff * (1.f - t);
 
         // don't interpolate on y if didn't move on y
-        if (std::abs(m_fields->m_yDiff) >= 0.0001f) {
-            float ty = t * m_fields->m_yDiff;
-            particle->startPos.y = ty + (particle->startPos.y - m_fields->m_yDiff);
-        }
+        if(std::abs(m_fields->m_yDiff) >= 0.0001f)
+            particle->startPos.y -= m_fields->m_yDiff * (1.f - t);
 
         m_fields->m_newIndex++;
     }
