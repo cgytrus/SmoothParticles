@@ -9,5 +9,16 @@
     "id": "cgytrus.smooth-particles",
     "name": "Smooth Particles",
     "developer": "ConfiG",
-    "description": "Interpolates particle spawn positions between frames to make the game appear smoother in general"
+    "description": "Interpolates particle spawn positions between frames to make the game appear smoother in general",
+    "repository": "https://github.com/cgytrus/SmoothParticles",
+    "issues": {
+        "info": "Report issues to the GitHub repo's issue tracker",
+        "url": "https://github.com/cgytrus/SmoothParticles/issues"
+    },
+    "resources": {
+        "files": [
+            "screenshots/Screenshot 2024-05-09 183700.png",
+            "screenshots/Screenshot 2024-05-09 183918.png"
+        ]
+    }
 }
