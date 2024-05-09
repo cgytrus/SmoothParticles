@@ -17,6 +17,9 @@ class $modify(CCParticleSystem) {
         size_t m_newIndex = 0;
         float m_xDiff = 0.f;
         float m_yDiff = 0.f;
+#ifdef GEODE_IS_ANDROID
+        bool m_prevIsActive = false;
+#endif
     };
 
     // i'm too lazy to make a formula out of this
@@ -57,6 +60,14 @@ class $modify(CCParticleSystem) {
     }
 
     void update(float dt) {
+        // cant hook resumeSystem on android cuz its too small so instead we do this
+#ifdef GEODE_IS_ANDROID
+        if (!m_prevIsActive && m_bIsActive) {
+            m_firstTime = true;
+        }
+        m_prevIsActive = m_bIsActive;
+#endif
+
         m_fields->m_newCount = 0;
 
         CCPoint curr = getPosition();
@@ -116,24 +127,10 @@ class $modify(CCParticleSystem) {
         CCParticleSystem::resetSystem();
     }
 
+#ifndef GEODE_IS_ANDROID
     void resumeSystem() {
         m_fields->m_firstTime = true;
-#ifdef GEODE_IS_ANDROID
-        m_bIsActive = true;
-#else
         CCParticleSystem::resumeSystem();
-#endif
     }
-};
-
-// resumeSystem is too small to hook on android, so we hook isFull after hooking resumeSystem,
-// the isFull hook will overwrite a part of the resumeSystem hook, but it doesnt matter
-// cuz we dont call orig in resumeSystem
-// TODO: fix hooking small funcs in tuliphook lol
-#ifdef GEODE_IS_ANDROID
-class $modify(CCParticleSystem) {
-    bool isFull() {
-        return m_uParticleCount == m_uTotalParticles;
-    }
-};
 #endif
+};
