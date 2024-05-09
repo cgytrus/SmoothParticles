@@ -8,10 +8,10 @@ Especially noticeable at higher speeds and/or lower FPS and/or in texture packs 
 <details>
  <summary>Before</summary>
  
- ![Before](screenshots/Screenshot 2024-05-09 183700.png)
+ ![Before](screenshots/before.png)
 </details>
 <details>
  <summary>After</summary>
  
- ![After](screenshots/Screenshot 2024-05-09 183918.png)
+ ![After](screenshots/after.png)
 </details>
