@@ -118,6 +118,20 @@ class $modify(CCParticleSystem) {
 
     void resumeSystem() {
         m_fields->m_firstTime = true;
+#ifdef GEODE_IS_ANDROID
+        m_bIsActive = true;
+#else
         CCParticleSystem::resumeSystem();
+#endif
     }
+
+    // resumeSystem is too small to hook on android, so we hook isFull after hooking resumeSystem
+    // the isFull hook will overwrite a part of the resumeSystem hook, but it doesnt matter
+    // cuz we dont call orig in resumeSystem
+    // TODO: fix hooking small funcs in tuliphook lol
+#ifdef GEODE_IS_ANDROID
+    bool isFull() {
+        return m_uParticleCount == m_uTotalParticles;
+    }
+#endif
 };
