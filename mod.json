@@ -1,0 +1,13 @@
+{
+    "geode": "2.0.0-beta.26",
+    "gd": {
+        "win": "2.204",
+        "mac": "2.200",
+        "android": "2.205"
+    },
+    "version": "v1.0.0",
+    "id": "cgytrus.smooth-particles",
+    "name": "Smooth Particles",
+    "developer": "ConfiG",
+    "description": "Interpolates particle spawn positions between frames to make the game appear smoother in general"
+}
