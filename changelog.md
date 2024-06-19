@@ -1,3 +1,7 @@
+## v2.1.0
+- updated to 2.206
+- temporarily removed mac support
+
 ## v2.0.1
 - fixed android
 - refactored the math a little
