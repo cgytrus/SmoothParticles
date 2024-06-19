@@ -14,6 +14,7 @@
         "info": "Report issues to the GitHub repo's issue tracker",
         "url": "https://github.com/cgytrus/SmoothParticles/issues"
     },
+    "tags": [ "universal", "offline", "enhancement" ],
     "resources": {
         "files": [
             "screenshots/before.png",

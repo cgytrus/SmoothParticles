@@ -1,3 +1,7 @@
+## vx.x.x
+- i forgot to tag it
+- idk whatever else comes next
+
 ## v2.1.0
 - updated to 2.206
 - temporarily removed mac support
