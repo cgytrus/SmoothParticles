@@ -17,7 +17,7 @@ class $modify(CCParticleSystem) {
         size_t m_newIndex = 0;
         float m_xDiff = 0.f;
         float m_yDiff = 0.f;
-#ifdef GEODE_IS_ANDROID
+#if defined(GEODE_IS_ANDROID) or defined(GEODE_IS_ARM_MAC)
         bool m_prevIsActive = false;
 #endif
     };
@@ -60,8 +60,8 @@ class $modify(CCParticleSystem) {
     }
 
     void update(float dt) {
-        // cant hook resumeSystem on android cuz its too small so instead we do this
-#ifdef GEODE_IS_ANDROID
+        // cant hook resumeSystem on arm cuz its too small so instead we do this
+#if defined(GEODE_IS_ANDROID) or defined(GEODE_IS_ARM_MAC)
         if (!m_fields->m_prevIsActive && m_bIsActive) {
             m_fields->m_firstTime = true;
         }
@@ -123,7 +123,7 @@ class $modify(CCParticleSystem) {
         CCParticleSystem::resetSystem();
     }
 
-#ifndef GEODE_IS_ANDROID
+#if !defined(GEODE_IS_ANDROID) and !defined(GEODE_IS_ARM_MAC)
     void resumeSystem() {
         m_fields->m_firstTime = true;
         CCParticleSystem::resumeSystem();

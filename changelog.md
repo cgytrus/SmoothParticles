@@ -1,6 +1,6 @@
-## vx.x.x
+## v2.2.0
 - i forgot to tag it
-- idk whatever else comes next
+- added mac support back
 
 ## v2.1.0
 - updated to 2.206
