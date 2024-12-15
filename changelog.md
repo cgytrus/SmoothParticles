@@ -1,3 +1,6 @@
+## v2.2.1
+- updated to 2.2074
+
 ## v2.2.0
 - i forgot to tag it
 - added mac support back
