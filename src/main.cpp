@@ -7,6 +7,11 @@ using namespace geode::prelude;
 
 // ported from https://github.com/cgytrus/SmoothParticles
 
+// cant hook resumeSystem on arm cuz its too small so instead we do this
+#if defined(GEODE_IS_ANDROID) or defined(GEODE_IS_ARM_MAC) or defined(GEODE_IS_IOS)
+#define RESUMESYSTEM_HOOK_WORKAROUND
+#endif
+
 static constexpr float tooFast = 50.f;
 
 class $modify(CCParticleSystem) {
@@ -17,7 +22,7 @@ class $modify(CCParticleSystem) {
         size_t m_newIndex = 0;
         float m_xDiff = 0.f;
         float m_yDiff = 0.f;
-#if defined(GEODE_IS_ANDROID) or defined(GEODE_IS_ARM_MAC)
+#ifdef RESUMESYSTEM_HOOK_WORKAROUND
         bool m_prevIsActive = false;
 #endif
     };
@@ -60,8 +65,7 @@ class $modify(CCParticleSystem) {
     }
 
     void update(float dt) {
-        // cant hook resumeSystem on arm cuz its too small so instead we do this
-#if defined(GEODE_IS_ANDROID) or defined(GEODE_IS_ARM_MAC)
+#ifdef RESUMESYSTEM_HOOK_WORKAROUND
         if (!m_fields->m_prevIsActive && m_bIsActive) {
             m_fields->m_firstTime = true;
         }
@@ -123,7 +127,7 @@ class $modify(CCParticleSystem) {
         CCParticleSystem::resetSystem();
     }
 
-#if !defined(GEODE_IS_ANDROID) and !defined(GEODE_IS_ARM_MAC)
+#ifndef RESUMESYSTEM_HOOK_WORKAROUND
     void resumeSystem() {
         m_fields->m_firstTime = true;
         CCParticleSystem::resumeSystem();
